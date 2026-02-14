@@ -1,1 +1,186 @@
-<!--Marci-->
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egyedi Böngésző</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+        .toolbar {
+            display: flex;
+            padding: 10px;
+            background-color: #343a40;
+            border-bottom: 1px solid #212529;
+            align-items: center;
+            gap: 10px;
+        }
+        .url-section, .search-section {
+            display: flex;
+            flex: 1;
+        }
+        #url-input, #search-input {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #495057;
+            border-radius: 4px 0 0 4px;
+            background-color: #495057;
+            color: #fff;
+        }
+        #go-button, #search-web-button, #search-images-button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #go-button {
+            border-radius: 0 4px 4px 0;
+        }
+        #search-web-button {
+            border-radius: 0;
+        }
+        #search-images-button {
+            border-radius: 0 4px 4px 0;
+        }
+        #go-button:hover, #search-web-button:hover, #search-images-button:hover {
+            background-color: #0056b3;
+        }
+        #browser-frame {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
+        #game-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        #game-button:hover {
+            background-color: #218838;
+        }
+        .homepage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #343a40;
+        }
+        .homepage h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .homepage p {
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+        .center-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        .center-content h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .center-content p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div class="url-section">
+            <input type="text" id="url-input" placeholder="Írd be az URL-t vagy keresőszót (pl. https://example.com vagy alma)">
+            <button id="go-button">Mehet</button>
+        </div>
+        <div class="search-section">
+            <input type="text" id="search-input" placeholder="Keresés (pl. alma)">
+            <button id="search-web-button">Web</button>
+            <button id="search-images-button">Képek</button>
+        </div>
+    </div>
+    <iframe id="browser-frame" style="display: none;"></iframe>
+    <div id="homepage" class="homepage">
+        <h1>Üdvözöllek az Egyedi Böngészőben!</h1>
+        <p>Írd be a kívánt URL-t vagy keresőszót fent, és nyomd meg a megfelelő gombot.</p>
+        <div class="center-content">
+            <h2>Középső Tartalom</h2>
+            <p>Ez egy példa középső tartalom, ami megjelenik a kezdőoldalon. Itt lehetne hírek, tippek vagy bármi más hasznos információ.</p>
+        </div>
+    </div>
+    <button id="game-button">játékmotort be!                                                              békás</button>
+
+    <script>
+        const homepage = document.getElementById('homepage');
+        const browserFrame = document.getElementById('browser-frame');
+
+        function loadUrl(url) {
+            if (url) {
+                browserFrame.src = url;
+                browserFrame.style.display = 'block';
+                homepage.style.display = 'none';
+            }
+        }
+
+        document.getElementById('go-button').addEventListener('click', function() {
+            let input = document.getElementById('url-input').value.trim();
+            if (input) {
+                if (input.startsWith('http://') || input.startsWith('https://') || input.includes('.') && !input.includes(' ')) {
+                    // Valószínűleg URL
+                    if (!input.startsWith('http://') && !input.startsWith('https://')) {
+                        input = 'https://' + input;
+                    }
+                    loadUrl(input);
+                } else {
+                    // Keresésként kezeljük Binggel
+                    const searchUrl = 'https://www.bing.com/search?q=' + encodeURIComponent(input);
+                    loadUrl(searchUrl);
+                }
+            }
+        });
+
+        document.getElementById('search-web-button').addEventListener('click', function() {
+            const query = document.getElementById('search-input').value.trim();
+            if (query) {
+                const searchUrl = 'https://www.bing.com/search?q=' + encodeURIComponent(query);
+                loadUrl(searchUrl);
+            }
+        });
+
+        document.getElementById('search-images-button').addEventListener('click', function() {
+            const query = document.getElementById('search-input').value.trim();
+            if (query) {
+                const searchUrl = 'https://www.bing.com/images/search?q=' + encodeURIComponent(query);
+                loadUrl(searchUrl);
+            }
+        });
+
+        document.getElementById('game-button').addEventListener('click', function() {
+            window.location.href = 'https://marci2015-01.github.io/Bekas/';
+        });
+    </script>
+</body>
+</html>
